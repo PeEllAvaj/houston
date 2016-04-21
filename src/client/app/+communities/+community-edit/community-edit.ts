@@ -12,7 +12,7 @@ import {CommunityEditFormComponent} from './community-editform';
   selector: 'community-edit',
   directives: [CommunityEditFormComponent],
   template: `
-        <community-editform [community]='communities$ | async' 
+        <community-editform [community]='community$ | async' 
         (save)='saveEvent($community)'
         (cancel)='onCancel()'></community-editform>`,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,17 +21,16 @@ export class CommunityEditComponent {
   community$: Observable<ICommunity>;
 
   constructor(
-      private _router: Router, private _dataService: DataService, private _params: RouteParams,
-      private _communitiesService: CommunitiesService) {
-    // how do I address
-    // the new state here
-    // I need a new event as an observable? yes...blank events stream?
-    this.community$ = _dataService.communities$.map(
-        communities => communities.find(community => community.id === _params.get('id')));
+    private _router: Router, private _dataService: DataService, private _params: RouteParams,
+    private _communitiesService: CommunitiesService) {
+ 
+    this.community$ =
+        _dataService.communities$.map(communities => communities.find(community => community.id === _params.get('id')));
   }
 
   saveCommunity(community: ICommunity) {
     // TODO:  Need to confirm save & route or show notification
+    console.log("Trying to save a community.",community);
     this._communitiesService.saveCommunity(community);
   }
 

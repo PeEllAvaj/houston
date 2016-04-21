@@ -57,6 +57,10 @@ export class CommunitiesService {
     this._http.put(`${BASE_URL}${community.id}`, JSON.stringify(community), HEADER)
         .subscribe(action => this.store.dispatch({type: 'UPDATE_COMMUNITY', payload: event}));
   }
+  
+  addMember(community: ICommunity, member: IDeveloper) {
+    this._http.put(`${BASE_URL}${community.id}/developer/${member.id}`, 'true', HEADER);
+  }
 
   // NOTE: Utility functions to simulate server generated IDs
   private addUUID(community: ICommunity): ICommunity {

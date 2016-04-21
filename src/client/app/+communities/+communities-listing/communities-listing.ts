@@ -19,6 +19,13 @@ export class CommunitiesListingComponent {
   constructor(
       private _router: Router, private _dataService: DataService, private store: Store<AppStore>) {
     this.communities$ = _dataService.communities$;
+    let item:ICommunity[];
+    this.communities$.subscribe(item => {
+      console.log("got a set from our observable",item);
+    }, throwable => {
+      console.error(throwable);
+    }, () => {console.log('finshed');} 
+    );
   }
 
   onEdit(community: ICommunity) { this._router.navigate(['CommunityEdit', {id: community.id}]); }
@@ -27,5 +34,5 @@ export class CommunitiesListingComponent {
     this._router.parent.navigate(['DevelopersComponent', 'DeveloperDetail', {id: developer.id}]);
   }
 
-  onNew() { this._router.navigate(['CommunityEdit']); }
+  onNew() { this._router.navigate(['CommunityEdit', {id:null}] ); }
 }

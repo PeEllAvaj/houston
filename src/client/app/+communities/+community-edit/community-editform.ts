@@ -2,11 +2,15 @@ import {EventEmitter, Output, Component, Input, ChangeDetectionStrategy} from 'a
 
 import {COMMUNITY_TYPES} from '../../const/const';
 import {ICommunity} from '../../communities';
+import {IDeveloper} from '../../developers';
+
+import {Observable} from 'rxjs/Observable';
+import {DataService} from '../../data-service';
 
 
 @Component({
   selector: 'community-editform',
-  templateUrl: 'app/+communities/+community-editform.html',
+  templateUrl: 'app/+communities/+community-edit/community-editform.html',
   styles: ['.mdl-textfield__label {top: 0;}'],
   inputs: ['community'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,6 +26,34 @@ export class CommunityEditFormComponent {
 
   originalID: string;
   selectedCommunity: ICommunity;
+  developers$: Observable<IDeveloper[]>;
+  developers: IDeveloper[] = [];
+  selectedDeveloper: IDeveloper;
+
+  constructor(private _dataService: DataService) {
+    this.developers$ = _dataService.developers$;
+    this.developers$.subscribe(
+      next => {
+        for(let dev of next) {
+          this.developers.push(dev);
+        }
+      },
+      err => console.log('Err:',err),
+      () => console.log('Finished')
+    );
+  }
+  
+  add(developer) {
+    let dev:IDeveloper = this.developers.find( elem => {
+      return elem.id === developer;
+    });
+    
+    if(!this.selectedCommunity.members) {
+      this.selectedCommunity.members = [];
+    }
+    this.selectedCommunity.members.push(dev);
+  }
+    
 
   @Input('community')
   set community(value: ICommunity) {
